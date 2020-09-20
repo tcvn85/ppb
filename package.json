@@ -1,0 +1,15 @@
+{
+  "name": "ppb",
+  "dependencies": {
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  },
+  "devDependencies": {
+    "highlight.js": "9.18.1",
+    "react-highlight.js": "1.0.7"
+  },
+  "scripts": {
+    "w": "shadow-cljs watch app",
+    "b": "shadow-cljs release app"
+  }
+}
