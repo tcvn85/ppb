@@ -1,4 +1,4 @@
-(ns ppb.db)
+(ns ppb.common.db)
 
 (def default-db
   {:name "re-frame"})

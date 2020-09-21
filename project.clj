@@ -9,6 +9,7 @@
                  [re-frame "1.1.1"]
                  [day8.re-frame/tracing "0.6.0"]
                  [clj-commons/secretary "1.2.4"]
+                 [appliedscience/js-interop "0.2.4"]
 
                  [binaryage/devtools "1.0.2"]
                  [day8.re-frame/re-frame-10x "0.7.0"]]
@@ -17,5 +18,5 @@
 
   :source-paths ["src"]
 
-  :clean-targets ^{:protect false} ["public/js" "worker"]
+  :clean-targets ^{:protect false} ["public/js" "workers-site/worker" "workers-site/ppb-ssr" "dist"]
   )

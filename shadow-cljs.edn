@@ -1,17 +1,31 @@
-{:lein true
+{:lein   true
 
- :builds {:app {:target :browser
-                :output-dir "public/js"
-                :asset-path "/js"
-                :modules {:app {:init-fn ppb.core/init
-                                :preloads [devtools.preload
-                                           day8.re-frame-10x.preload]}}
-                :dev {:compiler-options {:closure-defines {re-frame.trace.trace-enabled? true
-                                                           day8.re-frame.tracing.trace-enabled? true}}}
-                :release {:build-options
-                          {:ns-aliases
-                           {day8.re-frame.tracing day8.re-frame.tracing-stubs}}}
+ :builds {:spa    {:target     :browser
+                   :output-dir "public/js"
+                   :asset-path "/js"
+                   :modules    {:app {:entries  [ppb.spa.core]
+                                      :preloads [devtools.preload
+                                                 day8.re-frame-10x.preload]}}
+                   :dev        {:compiler-options {:closure-defines {re-frame.trace.trace-enabled?        true
+                                                                     day8.re-frame.tracing.trace-enabled? true}}}
+                   :release    {:build-options
+                                {:ns-aliases
+                                 {day8.re-frame.tracing day8.re-frame.tracing-stubs}}}
 
-                :devtools {:http-root "public"
-                           :http-port 8280
-                           }}}}
+                   :devtools   {:http-root "public"
+                                :http-port 8280
+                                }}
+          :server {:target    :node-script
+                   :main      ppb.server.core/start!
+                   :output-to "server/server.js"
+
+                   ; for auto-reload nodejs process
+                   :devtools  {:before-load-async ppb.server.core/stop!
+                               :after-load        ppb.server.core/start!}}
+          :ssr    {:target     :npm-module
+                   :output-dir "./workers-site/ppb-ssr"
+                   :entries    [ppb.ssr.core]
+                   :release    {:build-options
+                                {:ns-aliases
+                                 {day8.re-frame.tracing day8.re-frame.tracing-stubs}}}
+                   }}}

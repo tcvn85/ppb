@@ -1,0 +1,11 @@
+name = "ppb"
+type = "webpack"
+account_id = "a52fc85cc4f994973723b9e5e996e27e"
+workers_dev = true
+
+[site]
+bucket = "./public"
+
+[env.prod]
+route = "pepper.builders/*"
+zone_id = "65142336f5b96d9aafe23a3ab5dc948b"
