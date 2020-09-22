@@ -23,8 +23,8 @@
       hist
       EventType/NAVIGATE
       (fn [event]
-        (let [panel (secretary/dispatch! (.-token ^js event))]
-          (rf/dispatch [:common/route (.-token ^js event)]))))
+        (let [uri (.-token ^js event)]
+          (rf/dispatch [:common/route uri]))))
     (doto hist
       (.setUseFragment false)
       (.setPathPrefix "")
