@@ -15,7 +15,7 @@
         [:p "Our dedicated team is comprised of highly talented designers, architects, engineers, project managers, artisans, and construction personnel. Together we collaborate to bring forth world-class design, quality workmanship, meticulous attention to detail and customised client care. Having completed over 110 projects for Vietnamese and foreign clients, we have a wealth of experience spanning residential, hospitality, restaurant and retail projects."]
         [:p "We aren’t just builders and makers. We’re listeners. We set ourselves apart with personalised service. Each and every project starts by immersing ourselves in every aspect of the client’s objectives and dreams, whether they are personal and/or business related. Our solutions are original, innovative, and creative but at the same time cost-effective and time-efficient."]]]]
      [:div.page-banner.mb-6
-      [:img {:src "assets/about.png" :alt ""}]]
+      [:img {:src "/assets/about.png" :alt ""}]]
      [:div.row.mb-5
       [:div.col-md-5
        [:div.content-left

@@ -5,15 +5,27 @@
     ["express" :as express]
     ["serve-static" :as serve-static]
     ["http" :as http]
-    [ppb.ssr.core :as ssr]))
+    [ppb.ssr.core :as ssr]
+    ["fs" :as fs]
+    [clojure.string :as string]
+    [ppb.common.serial :as serial]))
 
+(def res-path "./public")
 
 (defn handler [req res next]
-  (let [uri (j/get req :path)
-        page (ssr/render ^:js {:uri uri})]
-    (if (nil? page)
-      (j/call res :sendStatus 404)
-      (j/call res :send page))))
+  (let [uri (j/get req :path)]
+    (if (string/ends-with? uri ".html")
+      (let [_ (ssr/init)
+            txt (some->> (ssr/uri-to-txt-path uri)
+                         (str res-path "/txt/")
+                         (#(fs/readFileSync % ^:js {:encoding "utf8" :flag "r"}))
+                         (.toString))
+            page (ssr/render ^:js {:uri uri
+                                   :txt txt})]
+        (if (nil? page)
+          (j/call res :sendStatus 404)
+          (j/call res :send page)))
+      (next))))
 
 (defn start! []
   (let [app-regex     #".*"
@@ -23,7 +35,7 @@
 
     (j/call app :use (j/call express :json))
 
-    (.use app (serve-static "public"))
+    (.use app (serve-static res-path))
 
     (j/call app :get app-regex handler)
 

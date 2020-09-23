@@ -19,11 +19,11 @@
     [:a.btn.btn-primary {:href "#"} "QUICK QUOTE"]]
    [:div.scroll-top-div
     [:a.scroll-top {:href "#"}
-     [:img.mr-2 {:src "img/angle-up.svg" :alt "" :width "10"}]
+     [:img.mr-2 {:src "/img/angle-up.svg" :alt "" :width "10"}]
      [:span "SCROLL TO TOP"]]]
    [:div.socials
     [:a {:href "https://www.facebook.com/PepperBuilders/" :target "_blank"}
-     [:img {:src "img/facebook-brands.svg" :alt "facebook" :width "20"}]]
+     [:img {:src "/img/facebook-brands.svg" :alt "facebook" :width "20"}]]
     [:a {:href "https://www.instagram.com/pepperbuildersmakers/" :target "_blank"}
-     [:img {:src "img/instagram-brands.svg" :alt "facebook" :width "20"}]]
-    [:a {:href "#"} [:img {:src "img/linkedin-brands.svg" :alt "" :target "_blank" :width "20"}]]]])
+     [:img {:src "/img/instagram-brands.svg" :alt "facebook" :width "20"}]]
+    [:a {:href "#"} [:img {:src "/img/linkedin-brands.svg" :alt "" :target "_blank" :width "20"}]]]])

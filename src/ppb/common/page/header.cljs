@@ -8,7 +8,7 @@
     [:div.container-fluid
      [comps/link {:href (router/uri :home)
                   :class "navbar-brand"}
-      [:img {:src "img/pepper-logo-2.svg" :width "200" :alt "" :loading "lazy"}]]
+      [:img {:src "/img/pepper-logo-2.svg" :width "200" :alt "" :loading "lazy"}]]
      [:button.navbar-toggler {:type "button" :data-toggle "collapse" :data-target "#navbarSupportedContent" :aria-controls "navbarSupportedContent" :aria-expanded "false" :aria-label "Toggle navigation"}
       [:span.first]
       [:span.second]

@@ -18,7 +18,7 @@
         [:p "Forging a personalised partnership with you built on trust, responsiveness, and enthusiasm, we’ll work together to build something that’s tailor-made for you."]
         [:p "Workflow integration from start to finish ensures that the project runs seamlessly and uses resources efficiently, so that the experience is stress free for everyone involved."]]]]
      [:div.page-banner.mb-6
-      [:img {:src "assets/service-banner.jpg" :alt ""}]]
+      [:img {:src "/assets/service-banner.jpg" :alt ""}]]
      [:div.row.mb-5
       [:div.col-md-5
        [:div.content-left

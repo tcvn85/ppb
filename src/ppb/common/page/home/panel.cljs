@@ -26,7 +26,7 @@
         [:a.btn.btn-primary {:href "#"} "QUICK QUOTE"]]
        [:div.socials
         [:a {:href "https://www.facebook.com/PepperBuilders/" :target "_blank"}
-         [:img {:src "img/facebook-brands.svg" :alt "facebook" :width "20"}]]
+         [:img {:src "/img/facebook-brands.svg" :alt "facebook" :width "20"}]]
         [:a {:href "https://www.instagram.com/pepperbuildersmakers/" :target "_blank"}
-         [:img {:src "img/instagram-brands.svg" :alt "facebook" :width "20"}]]
-        [:a {:href "#"} [:img {:src "img/linkedin-brands.svg" :alt "" :target "_blank" :width "20"}]]]]]]]])
+         [:img {:src "/img/instagram-brands.svg" :alt "facebook" :width "20"}]]
+        [:a {:href "#"} [:img {:src "/img/linkedin-brands.svg" :alt "" :target "_blank" :width "20"}]]]]]]]])

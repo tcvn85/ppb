@@ -51,19 +51,19 @@
         [:h2 "CONTACT"]
         [:ul.list-unstyled.contact-info
          [:li
-          [:span [:img {:src "img/map-marker-alt-solid.svg" :width "20" :alt ""}]]
+          [:span [:img {:src "/img/map-marker-alt-solid.svg" :width "20" :alt ""}]]
           [:a {:href "https://goo.gl/maps/DCojBLGvqBFkVVQ8A" :target "_blank"} "19 Hoang Sa, Da Kao Ward, District  1 - HCMC"]]
          [:li
-          [:span [:img {:src "img/map-marker-alt-solid.svg" :width "20" :alt ""}]]
+          [:span [:img {:src "/img/map-marker-alt-solid.svg" :width "20" :alt ""}]]
           [:a {:href "https://goo.gl/maps/8jwMJhz3izhKdFG57" :target "_blank"} "26 Ly Tu Trong, 2nd floor, Room 23-24, Ben Nghe Ward, District 1 - HCMC"]]
          [:li
-          [:span [:img {:src "img/envelope.svg" :width "20" :alt ""}]]
+          [:span [:img {:src "/img/envelope.svg" :width "20" :alt ""}]]
           [:a {:href "mailto:info@pepper.builders" :target "_blank"} "info@pepper.builders"]]
          [:li
-          [:span [:img {:src "img/phone.svg" :width "20" :alt ""}]]
+          [:span [:img {:src "/img/phone.svg" :width "20" :alt ""}]]
           [:a {:href "tel:+842839102028" :target "_blank"} "(+84) 28 3910 2028"]]
          [:li
-          [:span [:img {:src "img/phone.svg" :width "20" :alt ""}]]
+          [:span [:img {:src "/img/phone.svg" :width "20" :alt ""}]]
           [:a {:href "tel:+84931888149" :target "_blank"} "(+84) 931 888 149"]]]]]
       [:div.col-md-7
        [:div.content-right

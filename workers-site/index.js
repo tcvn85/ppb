@@ -46,7 +46,13 @@ async function handleEvent(event) {
             }
         }
         if (asset) {
-            const response = new Response(asset.body, asset);
+
+            // if (url.pathname.endsWith('.txt')) {
+            //     const s = await readStream(asset.body, 2000);
+            //     return new Response(s, {status: 200})
+            // }
+
+            const response = new Response(asset.body, asset)
             response.headers.set('X-XSS-Protection', '1; mode=block')
             response.headers.set('X-Content-Type-Options', 'nosniff')
             response.headers.set('X-Frame-Options', 'DENY')
@@ -80,4 +86,37 @@ async function notFound() {
 
 function internalServerError(e) {
     new Response(e.message || e.toString(), { status: 500 })
+}
+
+async function readStream(stream, limit=10) {
+    const reader = stream.getReader();
+    let str = "";
+    let linebreak = 0;
+
+    await reader.read().then(function processText({ done, value }) {
+        if (done) {
+            console.log("Stream complete");
+            return;
+        }
+
+        const utf8string = new TextDecoder("utf-8").decode(value);
+        let lb = 0;
+        [...utf8string].forEach(ch => {
+            if (ch === "\r") ++lb;
+        })
+
+        str += utf8string;
+        linebreak += lb;
+
+        if (linebreak >= limit) {
+            console.log("linebreak ", linebreak, " exceeded limit ", limit);
+            reader.cancel("limit exceeded");
+            return;
+        }
+
+        // Read some more, and call this function again
+        return reader.read().then(processText);
+    });
+
+    return str;
 }

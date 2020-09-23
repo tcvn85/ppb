@@ -4,8 +4,7 @@
            [goog.history EventType Html5History])
   (:require
     [secretary.core :as secretary]
-    [goog.events :as gevents]
-    [re-frame.core :as re-frame]
+    [ppb.common.util :as util]
     ))
 
 (defn uri->route [uri]
@@ -23,9 +22,11 @@
    :service      {:path  "/services.html"
                   :panel :route/service-panel}
    :projects     {:path  "/projects.html"
-                  :panel :route/projects-panel}
+                  :panel :route/projects-panel
+                  :txt-path "projects.txt"}
    :project-item {:path  "/projects/:slug"
-                  :panel :route/project-item-panel}})
+                  :panel :route/project-item-panel
+                  :txt-path util/ext-html-to-txt}})
 
 (defn uri
   ([route-id]
@@ -36,10 +37,6 @@
 
 (defn init-routes []
   (doall
-    (for [{:keys [path panel]} (vals routes)]
-      (defroute path path {:as params} {:path   path
-                                        :panel  panel
-                                        :params params})))
-  (defroute "*" []
-    :route/not-found-panel)
-  )
+    (for [{:as route :keys [path]} (vals routes)]
+      (defroute path path {:as params} (assoc route :params params))))
+  (defroute "*" [] {:panel :route/not-found-panel}))

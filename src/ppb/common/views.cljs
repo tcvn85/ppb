@@ -18,6 +18,7 @@
     :route/contact-panel [contact-panel]
     :route/service-panel [service-panel]
     :route/projects-panel [prj/projects-panel]
+    :route/project-item-panel [prj/project-item-panel]
 
     ; can't go here. It goes to other flow by the routes
     :route/not-found-panel [:div "Not found"]
