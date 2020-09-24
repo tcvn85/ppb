@@ -8,16 +8,20 @@
     [ppb.ssr.core :as ssr]
     ["fs" :as fs]
     [clojure.string :as string]
-    [ppb.common.serial :as serial]))
+    [ppb.common.serial :as serial]
+    [ppb.common.log :refer-macros [debug]]))
 
 (def res-path "./public")
 
 (defn handler [req res next]
-  (let [uri (j/get req :path)]
+  (let [uri (j/get req :path)
+        uri (if (= uri "/")
+              "/index.html"
+              uri)]
     (if (string/ends-with? uri ".html")
       (let [_ (ssr/init)
             txt (some->> (ssr/uri-to-txt-path uri)
-                         (str res-path "/txt/")
+                         (str res-path "/txt")
                          (#(fs/readFileSync % ^:js {:encoding "utf8" :flag "r"}))
                          (.toString))
             page (ssr/render ^:js {:uri uri

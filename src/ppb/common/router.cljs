@@ -11,20 +11,27 @@
   (secretary/dispatch! uri))
 
 (def routes
-  {:home         {:path  "/"
+  {:home         {:id    :home
+                  :path  "/"
                   :panel :route/home-panel}
-   :home1        {:path  "/index.html"
+   :home1        {:id    :home1
+                  :path  "/index.html"
                   :panel :route/home-panel}
-   :about        {:path  "/about.html"
+   :about        {:id    :about
+                  :path  "/about.html"
                   :panel :route/about-panel}
-   :contact      {:path  "/contact.html"
+   :contact      {:id    :contact
+                  :path  "/contact.html"
                   :panel :route/contact-panel}
-   :service      {:path  "/services.html"
+   :service      {:id    :service
+                  :path  "/services.html"
                   :panel :route/service-panel}
-   :projects     {:path  "/projects.html"
+   :projects     {:id    :projects
+                  :path  "/projects.html"
                   :panel :route/projects-panel
                   :txt-path "projects.txt"}
-   :project-item {:path  "/projects/:slug"
+   :project-item {:id    :project-item
+                  :path  "/projects/:slug"
                   :panel :route/project-item-panel
                   :txt-path util/ext-html-to-txt}})
 

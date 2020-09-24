@@ -16,15 +16,19 @@
 (defn ^:export render [init-state]
   (let [{:keys [uri txt]
          :or {uri "/"}} (js->clj init-state)
-        {:keys [panel] :as route} (router/uri->route uri)]
+        {:keys [panel id] :as route} (router/uri->route uri)]
     (when (not= panel :route/not-found-panel)
-      (re-frame/dispatch-sync [:common/initialize-db {:active-panel panel
-                                                      :data (->> (serial/lines2items txt)
-                                                                 (take serial/default-limit))}])
-      ;(debug (pr-str @re-frame.db/app-db))
-      ;(println (serial/lines2items txt))
-      (->> (server/render-to-static-markup (layout/layout views/main-panel))
-           (str "<!doctype html>")))))
+      (let [[meta-data & data] (serial/lines2items txt)
+            init-state (cond-> {:active-panel panel}
+                               (some? data) (assoc id
+                                                   {:meta-data meta-data
+                                                    :data (->> data
+                                                               (take serial/default-limit))}))]
+        (re-frame/dispatch-sync [:common/initialize-db init-state])
+        (debug (pr-str @re-frame.db/app-db))
+        (->> (server/render-to-static-markup (layout/layout views/main-panel init-state))
+             (str "<!doctype html>")))
+      )))
 
 (defn ^:export uri-to-txt-path [uri]
   (let [{:keys [txt-path]} (router/uri->route uri)]

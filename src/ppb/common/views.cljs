@@ -7,6 +7,7 @@
    [ppb.common.page.contact.panel :refer [contact-panel]]
    [ppb.common.page.service.panel :refer [service-panel]]
    [ppb.common.page.project.panel :as prj]
+   [ppb.common.page.project-item.panel :refer [project-item-panel]]
    [ppb.common.page.header :refer [header]]
    [ppb.common.page.footer :refer [footer quick-quote]]
    ))
@@ -18,7 +19,7 @@
     :route/contact-panel [contact-panel]
     :route/service-panel [service-panel]
     :route/projects-panel [prj/projects-panel]
-    :route/project-item-panel [prj/project-item-panel]
+    :route/project-item-panel [project-item-panel]
 
     ; can't go here. It goes to other flow by the routes
     :route/not-found-panel [:div "Not found"]

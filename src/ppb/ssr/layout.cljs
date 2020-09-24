@@ -1,6 +1,6 @@
 (ns ppb.ssr.layout)
 
-(defn layout [body]
+(defn layout [body init-state]
   [:html {:lang "en"}
    [:head
     [:meta {:charset "utf-8"}]
@@ -10,4 +10,6 @@
    [:body
     [:noscript "This site is a JavaScript app. Please enable JavaScript to continue."]
     [body]
-    [:script {:src "/js/app.js"}]]])
+    [:script {:src "/js/app.js"}]
+    [:script {:dangerouslySetInnerHTML {:__html (str "var initState='" (pr-str init-state) "';"
+                                                     "ppb.spa.core.init();")}}]]])
