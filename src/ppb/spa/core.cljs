@@ -16,7 +16,7 @@
     (println "dev mode")))
 
 (defn ^:dev/after-load mount-root []
-  (re-frame/clear-subscription-cache!)
+  ;(re-frame/clear-subscription-cache!)
 
   ; app id is from the ppb.common.views
   (let [root-el (.getElementById js/document "app")]

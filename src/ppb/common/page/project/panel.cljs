@@ -3,9 +3,12 @@
     [ppb.common.page.footer :refer [footer quick-quote]]
     [re-frame.core :as rf]
     [ppb.common.page.project.subs :as subs]
+    [ppb.common.page.project.events :as events]
     [ppb.common.model.project :as prj]
     [clojure.string :as string]
-    [ppb.common.components :as comps]))
+    [ppb.common.components :as comps]
+    [applied-science.js-interop :as j]
+    [ppb.common.log :refer-macros [debug]]))
 
 (defn project [data]
   [:div.col-md-6.col-sm-6
@@ -34,6 +37,11 @@
       (map-indexed (fn [idx data]
                      ^{:key idx} [project data])
                    @(rf/subscribe [::subs/projects]))]]
-    [:div.project-more.text-center.mt-3.mb-5
-     [:a.btn.btn-outline-primary {:href "#"} "VIEW MORE"]]
+    (if @(rf/subscribe [::subs/prj-more?])
+      [:div.project-more.text-center.mt-3.mb-5
+       [:button.btn.btn-outline-primary
+        {:on-click (fn [e]
+                     (j/call e :preventDefault)
+                     (rf/dispatch [::events/load-more]))}
+        "VIEW MORE"]])
     [quick-quote]]])

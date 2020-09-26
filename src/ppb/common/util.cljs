@@ -6,7 +6,7 @@
   (string/replace filename #"\.html" ".txt"))
 
 (defn get-current-uri! []
-  (let [uri (j/get js/window :pathname)]
+  (let [uri (j/get js/location :pathname)]
     (if (or (nil? uri)
             (= uri "/"))
       "/index.html"

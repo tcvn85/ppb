@@ -1,5 +1,6 @@
 (ns ppb.common.page.project.subs
-  (:require [re-frame.core :as rf]))
+  (:require [re-frame.core :as rf]
+            [ppb.common.log :refer-macros [debug]]))
 
 (rf/reg-sub
   ::projects
@@ -17,3 +18,9 @@
   (fn [meta _]
     (get meta "all")))
 
+(rf/reg-sub
+  ::prj-more?
+  :<- [::projects]
+  :<- [::prj-total]
+  (fn [[prjs total] _]
+    (< (count prjs) total)))

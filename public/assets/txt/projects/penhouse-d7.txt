@@ -1,2 +1,2 @@
-{"all" 2, "Hotels & resorts" 1, "Residential" 1}
+[["the nang suite" "/assets/img/project1.jpg"]]
 ["penhouse d7" "Residential" "/assets/img/project2.jpg" "2019" "Ho Chi Minh" "550 m2" "A block of Serviced condos built on a tube house site, featuring 8 rooms with bespoke interiors and furniture manufactured in our workshop 800km away. Our client wanted to diversify their business portfolio whilst creating a unique space with a personal touch." "/assets/img/project-detail-1.jpg" "/assets/img/project-detail-2.jpg" ["/assets/img/project-detail-3.jpg" "/assets/img/project-detail-4.jpg" "/assets/img/project-detail-5.jpg" "/assets/img/project-detail-6.jpg"] ["the nang suite"]]

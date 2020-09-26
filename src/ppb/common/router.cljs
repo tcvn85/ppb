@@ -56,3 +56,7 @@
              (fn? txt-path) (txt-path uri)
              true (assert false))
            (str "/assets/txt")))))
+
+(defn txt-path-options [uri limit]
+  (some-> (uri-to-txt-path uri)
+          (str "/limit/" limit)))

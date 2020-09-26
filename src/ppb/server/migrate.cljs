@@ -97,6 +97,10 @@
   (doseq [[lang projects] project-list]
     (let [meta-line (atom {"all" 0})
           project-root-path "/projects"
+          ids->prj (->> projects
+                        (map (fn [row]
+                               [(project/get-column row ::project/title) row]))
+                        (into {}))
           lines (mapv (fn [prj]
                         (let [line (serial/item2str prj)]
                           (swap! meta-line update (project/get-column prj ::project/category) inc)
@@ -106,9 +110,16 @@
 
       (mkdir-if-none (txt-path lang project-root-path))
 
-      (doseq [prj projects]
-        (let [slug    (str project-root-path "/" (project/get-column prj ::project/txt-uri))
-              content (->> [@meta-line (serial/item2str prj)]
+      (doseq [row projects]
+        (let [slug    (str project-root-path "/" (project/get-column row ::project/txt-uri))
+              rel-prjs (->> (project/get-column row ::project/related-projects)
+                            (map ids->prj)
+                            (filter identity))
+              meta     (->> rel-prjs
+                            (mapv (fn [row]
+                                    [(project/get-column row ::project/title)
+                                     (project/get-column row ::project/image-hero)])))
+              content (->> [meta (serial/item2str row)]
                            (string/join serial/line-separator))]
           (spit (txt-path lang slug) content)))
 

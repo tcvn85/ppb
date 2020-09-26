@@ -9,8 +9,7 @@
     [ppb.common.router :as router]
     [ppb.common.serial :as serial]
     [ppb.common.ajax :as ajax]
-    [applied-science.js-interop :as j]
-    [ppb.common.util :as util]))
+    [ppb.common.config :as config]))
 
 (re-frame/reg-event-db
   :common/initialize-db
@@ -39,11 +38,14 @@
     (if (and (some? txt-path)
              (no-data? id))
       (go
-        (debug "init-data-async! and refresh data" route)
-        (let [txt (<! (ajax/async-call {:url (router/uri-to-txt-path uri) :raw-response? true}))]
+        ;(debug "init-data-async! and refresh data" route)
+        (let [txt (<! (ajax/async-call {:url (router/txt-path-options uri config/page-count)
+                                        :raw-response? true}))]
           (assert (some? txt))
           (when (fn? callback)
-            (callback {:txt txt :route route :uri uri})))))))
+            (callback {:txt txt
+                       :route route
+                       :uri uri})))))))
 
 (re-frame/reg-event-db
   :common/set-init-data
