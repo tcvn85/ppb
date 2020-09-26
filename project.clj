@@ -10,6 +10,7 @@
                  [day8.re-frame/tracing "0.6.0"]
                  [clj-commons/secretary "1.2.4"]
                  [appliedscience/js-interop "0.2.4"]
+                 [cljs-ajax "0.8.0"]
 
                  [binaryage/devtools "1.0.2"]
                  [day8.re-frame/re-frame-10x "0.7.0"]]

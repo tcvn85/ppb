@@ -4,33 +4,32 @@
     [re-frame.core :as rf]
     [ppb.common.page.project.subs :as subs]
     [ppb.common.model.project :as prj]
-    [clojure.string :as string]))
+    [clojure.string :as string]
+    [ppb.common.components :as comps]))
 
 (defn project [data]
   [:div.col-md-6.col-sm-6
    [:div.project-item
-    [:a {:href (str "/projects/" (prj/get-column data ::prj/slug))}
-     [:div.project-img-wrapper
-      [:img.project-img {:src (prj/get-column data ::prj/hero-image) :alt (prj/get-column data ::prj/title)}]]
-     [:div.project-caption
-      [:h2 (-> (prj/get-column data ::prj/category)
-               (string/upper-case))]
-      [:h4 (str (-> (prj/get-column data ::prj/title)
-                    (string/upper-case))
-                " | "
-                (prj/get-column data ::prj/area))]]]]])
+    [comps/link {:href (str "/projects/" (prj/get-column data ::prj/slug))}
+     [:div
+      [:div.project-img-wrapper
+       [:img.project-img {:src (prj/get-column data ::prj/image-hero) :alt (prj/get-column data ::prj/title)}]]
+      [:div.project-caption
+       [:h2 (-> (prj/get-column data ::prj/category)
+                (string/upper-case))]
+       [:h4 (str (-> (prj/get-column data ::prj/title)
+                     (string/upper-case))
+                 " | "
+                 (prj/get-column data ::prj/area))]]]]]])
 
 (defn projects-panel []
   [:main.main
    [:div.container-fluid
     [:div.projects-list
      [:div.filter.mt-4
-      [:a.active {:href "#"} "All" [:span @(rf/subscribe [::subs/prj-total])]]
-      [:a {:href "#"} "Apartments" [:span @(rf/subscribe [::subs/tag-item-total 1])]]
-      [:a {:href "#"} "Villas" [:span @(rf/subscribe [::subs/tag-item-total 2])]]
-      [:a {:href "#"} "Hotels and Resorts" [:span @(rf/subscribe [::subs/tag-item-total 3])]]
-      [:a {:href "#"} "Restaurants" [:span @(rf/subscribe [::subs/tag-item-total 4])]]
-      ]
+      (map-indexed (fn [idx [cat prj-count]]
+                     ^{:key idx} [:a.active {:href "#"} (string/capitalize cat) [:span prj-count]])
+                   @(rf/subscribe [::subs/meta]))]
      [:div.row
       (map-indexed (fn [idx data]
                      ^{:key idx} [project data])

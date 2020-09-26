@@ -9,7 +9,8 @@
     ["fs" :as fs]
     [clojure.string :as string]
     [ppb.common.serial :as serial]
-    [ppb.common.log :refer-macros [debug]]))
+    [ppb.common.log :refer-macros [debug]]
+    [ppb.common.router :as router]))
 
 (def res-path "./public")
 
@@ -20,8 +21,8 @@
               uri)]
     (if (string/ends-with? uri ".html")
       (let [_ (ssr/init)
-            txt (some->> (ssr/uri-to-txt-path uri)
-                         (str res-path "/txt")
+            txt (some->> (router/uri-to-txt-path uri)
+                         (str res-path)
                          (#(fs/readFileSync % ^:js {:encoding "utf8" :flag "r"}))
                          (.toString))
             page (ssr/render ^:js {:uri uri

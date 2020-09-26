@@ -2,32 +2,33 @@
   (:require [clojure.string :as string]
             [ppb.common.log :refer-macros [spy]]))
 
-(def tags ["All" "Apartments" "Villas" "Hotels and Resorts" "Restaurants"])
-
-#_["the nang suite"                                        ; slug, title, txt file, html file
-   1
-   "/assets/project-detail-1.jpg"
-   [1]                                                     ; tags
+#_["the nang suite"
+   "Hotels & resorts"
+   "/assets/img/project1.jpg"
    "2019"
    "Da Nang"
    "550 m2"
-   "A block of Serviced condos built on a tube house ..."  ; description
-   "/assets/project-detail-2.jpg"                          ; 3D render
-   "/assets/project-detail-2.jpg"                          ; Reality
-   "/assets/project-detail-3.jpg,/assets/project-detail-4.jpg,/assets/project-detail-5.jpg,/assets/project-detail-6.jpg"
-   ]
+   "A block of Serviced condos built on a tube house site, featuring 8 rooms with bespoke interiors and furniture manufactured in our workshop 800km away. Our client wanted to diversify their business portfolio whilst creating a unique space with a personal touch."
+   "/assets/img/project-detail-1.jpg"                          ; 3D render
+   "/assets/img/project-detail-2.jpg"                          ; Reality
+   ["/assets/img/project-detail-3.jpg"
+    "/assets/img/project-detail-4.jpg"
+    "/assets/img/project-detail-5.jpg"
+    "/assets/img/project-detail-6.jpg"]
+   ["penhouse d7"]]
+
 (def columns
   (->> [::title
         ::category
-        ::hero-image
-        ::tags
+        ::image-hero
         ::created-date
         ::location
         ::area
         ::description
-        ::3d-image
-        ::real-image
-        ::images]
+        ::image-3d
+        ::image-real
+        ::images
+        ::related-projects]
        (map-indexed (fn [idx k]
                       [k #(nth % idx)]))
        (into {})))
@@ -44,16 +45,9 @@
 (defn txt-uri [title]
   (str (title-id title) ".txt"))
 
-(defn tag-id2name [idx]
-  (nth tags idx))
-
 (defn get-column [row column]
   (let [col-fn (columns column)]
     (cond
-      (= ::tags column) (->> (col-fn row)
-                             (mapv tag-id2name))
-      (= ::category column) (-> (col-fn row)
-                                (tag-id2name))
       (some? col-fn) (col-fn row)
       (= ::slug column) (slug (get-column row ::title))
       (= ::txt-uri column) (txt-uri (get-column row ::title))

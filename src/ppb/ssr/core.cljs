@@ -4,36 +4,27 @@
     [re-frame.core :as re-frame]
     [reagent.dom.server :as server]
     [ppb.common.views :as views]
-    [ppb.common.events]
+    [ppb.common.events :as events]
     [ppb.ssr.layout :as layout]
     [ppb.common.log :refer-macros [debug]]
     [ppb.common.serial :as serial]
     [applied-science.js-interop :as j]))
 
 (defn ^:export init []
-  (router/init-routes))
+  (router/init-routes!))
+
+(defn prepend-doctype [s]
+  (str "<!doctype html>" s))
 
 (defn ^:export render [init-state]
   (let [{:keys [uri txt]
-         :or {uri "/"}} (js->clj init-state)
-        {:keys [panel id] :as route} (router/uri->route uri)]
+         :or   {uri "/index.html"}} (js->clj init-state)
+        {:keys [panel] :as route} (router/uri->route uri)]
     (when (not= panel :route/not-found-panel)
-      (let [[meta-data & data] (serial/lines2items txt)
-            init-state (cond-> {:active-panel panel}
-                               (some? data) (assoc id
-                                                   {:meta-data meta-data
-                                                    :data (->> data
-                                                               (take serial/default-limit))}))]
-        (re-frame/dispatch-sync [:common/initialize-db init-state])
-        (debug (pr-str @re-frame.db/app-db))
-        (->> (server/render-to-static-markup (layout/layout views/main-panel init-state))
-             (str "<!doctype html>")))
+      (events/init-data-sync! {:uri uri :txt txt :route route})
+      (debug "render app-db" (pr-str @re-frame.db/app-db))
+      (-> (layout/layout views/main-panel)
+          (server/render-to-static-markup)
+          (prepend-doctype))
       )))
-
-(defn ^:export uri-to-txt-path [uri]
-  (let [{:keys [txt-path]} (router/uri->route uri)]
-    (cond
-      (string? txt-path) txt-path
-      (fn? txt-path) (txt-path uri)
-      true nil)))
 

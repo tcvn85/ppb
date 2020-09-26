@@ -1,9 +1,8 @@
-(ns ppb.spa.nav
+(ns ppb.common.nav
   (:import [goog History]
            [goog.history EventType Html5History])
   (:require
     [ppb.common.log :refer-macros [debug info]]
-    [secretary.core :as secretary]
     [goog.events :as gevents]
     [re-frame.core :as rf]
     [applied-science.js-interop :as j]))
@@ -14,10 +13,10 @@
   (some? @history))
 
 (defn goto [uri]
-  (if (valid?)
+  (when (valid?)
     (.setToken ^js @history uri)))
 
-(defn hook-browser-navigation! []
+(defn init! []
   (let [hist (Html5History.)]
     (gevents/listen
       hist

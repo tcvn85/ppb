@@ -29,7 +29,7 @@
    :projects     {:id    :projects
                   :path  "/projects.html"
                   :panel :route/projects-panel
-                  :txt-path "projects.txt"}
+                  :txt-path "/projects.txt"}
    :project-item {:id    :project-item
                   :path  "/projects/:slug"
                   :panel :route/project-item-panel
@@ -42,8 +42,17 @@
    (when-let [{:keys [path]} (routes route-id)]
      (secretary/render-route path params))))
 
-(defn init-routes []
+(defn init-routes! []
   (doall
     (for [{:as route :keys [path]} (vals routes)]
       (defroute path path {:as params} (assoc route :params params))))
   (defroute "*" [] {:panel :route/not-found-panel}))
+
+(defn ^:export uri-to-txt-path [uri]
+  (let [{:keys [txt-path]} (uri->route uri)]
+    (if (some? txt-path)
+      (->> (cond
+             (string? txt-path) txt-path
+             (fn? txt-path) (txt-path uri)
+             true (assert false))
+           (str "/assets/txt")))))

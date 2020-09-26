@@ -15,11 +15,5 @@
   ::prj-total
   :<- [::meta]
   (fn [meta _]
-    (first meta)))
+    (get meta "all")))
 
-(rf/reg-sub
-  ::tag-item-total
-  :<- [::meta]
-  (fn [meta [_ idx]]
-    (when (sequential? meta)
-      (nth meta idx))))

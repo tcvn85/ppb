@@ -1,0 +1,37 @@
+
+(ns ppb.common.fx
+  (:require-macros [apps.accrue.log :refer [debug]])
+  (:require [ppb.common.ajax :as ajax]
+            [cljs.core.async :refer [alts! chan <! >! close! timeout put!] :refer-macros [go]]
+            [re-frame.core :as re-frame]
+            [day8.re-frame.tracing :refer-macros [fn-traced]]
+            [applied-science.js-interop :as j]
+            [ppb.common.nav :as nav]
+            ))
+
+(re-frame/reg-fx
+  ::xhr
+  (fn-traced [{:as   request
+               :keys [on-failure
+                      on-success]}]
+    (go
+      (let [should-dispatch-fail? (-> on-failure nil? not)
+            response (<! (ajax/async-call (merge request
+                                                 {:respond-with-error? should-dispatch-fail?})))
+            errors (-> response :response :errors)]
+        (if (and (empty? errors)
+                 (nil? (:failure response)))
+          (re-frame/dispatch (conj on-success response))
+          (when should-dispatch-fail?
+            (re-frame/dispatch (conj on-failure errors))))))))
+
+(re-frame/reg-fx
+  ::route
+  (fn-traced [uri]
+    (nav/goto uri)))
+
+(re-frame/reg-fx
+  ::redirect
+  (fn-traced [url]
+    (j/assoc! js/window :location url)))
+
