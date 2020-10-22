@@ -12,7 +12,8 @@
      [:div.container-fluid
       [:div.project-detail.mt-4
        [:img.img-fluid.mb-5 {:src (project/get-column row ::project/image-hero) :alt ""}]
-       [:h1.mb-4 (string/upper-case (project/get-column row ::project/title))]
+       [:h1.mb-4 (some-> (project/get-column row ::project/title)
+                         (string/upper-case))]
        [:div.row.mb-5
         [:div.col-md-5
          [:ul.project-pros
@@ -38,7 +39,8 @@
             (map-indexed (fn [idx image-uri]
                            ^{:key idx} [:div.col-md-6
                                         [:img {:src image-uri :alt ""}]])
-                         [img1 img2])]
+                         (->> [img1 img2]
+                              (remove nil?)))]
            [:div.row
             (map-indexed (fn [idx image-uri]
                            ^{:key idx} [:div.col-md-6

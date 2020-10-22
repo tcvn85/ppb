@@ -25,9 +25,10 @@
 
 (defn handler [req res next]
   (let [uri (j/get req :path)
-        uri (if (= uri "/")
-              "/index.html"
-              uri)]
+        uri (-> (if (= uri "/")
+                  "/index.html"
+                  uri)
+                (js/decodeURIComponent))]
     (if (string/ends-with? uri ".html")
       (let [_ (ssr/init)
             txt (some-> (router/uri-to-txt-path uri)
@@ -41,7 +42,8 @@
       (next))))
 
 (defn txt-limit-handler [req res next]
-  (let [uri (j/get req :path)
+  (let [uri (-> (j/get req :path)
+                (js/decodeURIComponent))
         [txt-path limit] (string/split uri #"/limit/")
         limit    (-> (int limit)
                      inc)

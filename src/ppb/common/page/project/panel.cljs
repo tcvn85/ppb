@@ -8,7 +8,8 @@
     [clojure.string :as string]
     [ppb.common.components :as comps]
     [applied-science.js-interop :as j]
-    [ppb.common.log :refer-macros [debug]]))
+    [ppb.common.log :refer-macros [debug]]
+    [ppb.common.router :as router]))
 
 (defn project [data]
   [:div.col-md-6.col-sm-6
@@ -25,23 +26,38 @@
                  " | "
                  (prj/get-column data ::prj/area))]]]]]])
 
-(defn projects-panel []
+(defn cat-item [{:keys [uri active? prj-count category]}]
+  [comps/link {:href uri
+               :class [(when active?
+                         "active")]}
+   [:div (if (string? category)
+           (string/capitalize category)
+           "") [:span prj-count]]])
+
+(defn projects-panel [category]
   [:main.main
    [:div.container-fluid
     [:div.projects-list
      [:div.filter.mt-4
-      (map-indexed (fn [idx [cat prj-count]]
-                     ^{:key idx} [:a.active {:href "#"} (string/capitalize cat) [:span prj-count]])
-                   @(rf/subscribe [::subs/meta]))]
+      (let [[category prj-count] (first @(rf/subscribe [::subs/meta category]))
+            uri (router/uri ::router/projects)
+            active? (= uri @(rf/subscribe [:common/uri category]))]
+        ^{:key category} [cat-item {:uri uri :active? active? :prj-count prj-count :category category}])
+      (doall
+        (map-indexed (fn [idx [category prj-count]]
+                       (let [uri (router/uri ::router/projects-cat {:category category})
+                             active? (= uri @(rf/subscribe [:common/uri]))]
+                         ^{:key idx} [cat-item {:uri uri :active? active? :prj-count prj-count :category category}]))
+                     (rest @(rf/subscribe [::subs/meta category]))))]
      [:div.row
       (map-indexed (fn [idx data]
                      ^{:key idx} [project data])
-                   @(rf/subscribe [::subs/projects]))]]
-    (if @(rf/subscribe [::subs/prj-more?])
+                   @(rf/subscribe [::subs/projects category]))]]
+    (if @(rf/subscribe [::subs/prj-more? category])
       [:div.project-more.text-center.mt-3.mb-5
        [:button.btn.btn-outline-primary
         {:on-click (fn [e]
                      (j/call e :preventDefault)
-                     (rf/dispatch [::events/load-more]))}
+                     (rf/dispatch [::events/load-more category]))}
         "VIEW MORE"]])
     [quick-quote]]])

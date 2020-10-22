@@ -34,10 +34,10 @@
        (into {})))
 
 (defn title-id [title]
-  (-> title
-      string/lower-case
-      (string/split #" ")
-      (#(string/join "-" %))))
+  (some-> title
+          string/lower-case
+          (string/split #" ")
+          (#(string/join "-" %))))
 
 (defn slug [title]
   (str (title-id title) ".html"))
@@ -46,10 +46,11 @@
   (str (title-id title) ".txt"))
 
 (defn get-column [row column]
-  (let [col-fn (columns column)]
-    (cond
-      (some? col-fn) (col-fn row)
-      (= ::slug column) (slug (get-column row ::title))
-      (= ::txt-uri column) (txt-uri (get-column row ::title))
-      true nil)))
+  (when row
+    (let [col-fn (columns column)]
+      (cond
+        (some? col-fn) (col-fn row)
+        (= ::slug column) (slug (get-column row ::title))
+        (= ::txt-uri column) (txt-uri (get-column row ::title))
+        true nil))))
 

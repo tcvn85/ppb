@@ -12,7 +12,7 @@
 (defn valid? []
   (some? @history))
 
-(defn goto [uri]
+(defn goto! [uri]
   (when (valid?)
     (.setToken ^js @history uri)))
 
@@ -23,7 +23,7 @@
       EventType/NAVIGATE
       (fn [event]
         (let [uri (.-token ^js event)]
-          (rf/dispatch [:common/route uri]))))
+          (rf/dispatch [:common/set-route uri]))))
     (doto hist
       (.setUseFragment false)
       (.setPathPrefix "")

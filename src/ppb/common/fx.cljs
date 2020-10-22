@@ -28,7 +28,7 @@
 (re-frame/reg-fx
   ::route
   (fn-traced [uri]
-    (nav/goto uri)))
+    (nav/goto! uri)))
 
 (re-frame/reg-fx
   ::redirect

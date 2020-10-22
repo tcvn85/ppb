@@ -21,10 +21,12 @@
          :or   {uri "/index.html"}} (js->clj init-state)
         {:keys [panel] :as route} (router/uri->route uri)]
     (when (not= panel :route/not-found-panel)
-      (events/init-data-sync! {:uri uri :txt txt :route route})
-      (debug "render app-db" (pr-str @re-frame.db/app-db))
-      (-> (layout/layout views/main-panel)
-          (server/render-to-static-markup)
-          (prepend-doctype))
-      )))
+      (let [init-state (-> {:active-route (dissoc route :txt-path)
+                            :uri uri}
+                           (assoc uri (events/txt->state txt)))]
+        (re-frame/dispatch-sync [:common/initialize-db init-state])
+        (debug "render app-db" (pr-str @re-frame.db/app-db))
+        (-> (layout/layout views/main-panel init-state)
+            (server/render-to-static-markup)
+            (prepend-doctype))))))
 

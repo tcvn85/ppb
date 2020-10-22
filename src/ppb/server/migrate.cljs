@@ -95,20 +95,18 @@
 
 (defn txt! []
   (doseq [[lang projects] project-list]
-    (let [meta-line (atom {"all" 0})
+    (let [categories (atom {"all" 0})
           project-root-path "/projects"
           ids->prj (->> projects
                         (map (fn [row]
                                [(project/get-column row ::project/title) row]))
-                        (into {}))
-          lines (mapv (fn [prj]
-                        (let [line (serial/item2str prj)]
-                          (swap! meta-line update (project/get-column prj ::project/category) inc)
-                          (swap! meta-line update "all" inc)
-                          line))
-                      projects)]
+                        (into {}))]
 
       (mkdir-if-none (txt-path lang project-root-path))
+
+      (doseq [row projects]
+        (swap! categories update (project/get-column row ::project/category) inc)
+        (swap! categories update "all" inc))
 
       (doseq [row projects]
         (let [slug    (str project-root-path "/" (project/get-column row ::project/txt-uri))
@@ -123,7 +121,19 @@
                            (string/join serial/line-separator))]
           (spit (txt-path lang slug) content)))
 
-      (->> (concat [@meta-line] lines)
+      (doseq [[category _] @categories]
+        (when (not= category "all")
+          (->> projects
+               (filter (fn [row]
+                         (= category (project/get-column row ::project/category))))
+               (map serial/item2str)
+               (concat [@categories])
+               (string/join serial/line-separator)
+               (spit (txt-path lang (str "/projects-category/" category ".txt"))))))
+
+      (->> projects
+           (map serial/item2str)
+           (concat [@categories])
            (string/join serial/line-separator)
            (spit (txt-path lang "/projects.txt"))))))
 

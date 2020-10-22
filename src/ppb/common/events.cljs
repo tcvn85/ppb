@@ -2,7 +2,7 @@
   (:require
     [ppb.common.log :refer-macros [debug]]
     [cljs.core.async :refer [alts! chan <! >! close! timeout put!] :refer-macros [go]]
-    [re-frame.core :as re-frame]
+    [re-frame.core :as rf]
     [re-frame.db :as rf.db]
     [ppb.common.db :as db]
     [day8.re-frame.tracing :refer-macros [fn-traced]]
@@ -11,53 +11,40 @@
     [ppb.common.ajax :as ajax]
     [ppb.common.config :as config]))
 
-(re-frame/reg-event-db
+(rf/reg-event-db
   :common/initialize-db
   (fn-traced [_ [_ init-state]]
-   (merge db/default-db init-state)))
+    (merge db/default-db init-state)))
 
-(defn no-data? [route-id]
-  (nil? (get-in @rf.db/app-db [route-id])))
+(defn no-data? [uri]
+  (nil? (get-in @rf.db/app-db [uri])))
 
 (defn txt->state [txt]
   (let [[meta-data & lines-data :as data] (serial/lines2items txt)]
     (when (some? data)
       {:meta-data meta-data
-       :data lines-data})))
+       :data (into [] lines-data)})))
 
-(defn init-data-sync! [{:keys [txt uri route]
-                        {:keys [id]} :route}]
-  (let [init-state (-> {:active-route route
-                        :uri uri}
-                       (assoc id (txt->state txt)))]
-    (re-frame/dispatch-sync [:common/initialize-db init-state])
-    init-state))
-
-(defn init-data-async! [uri callback]
-  (let [{:keys [txt-path id] :as route} (router/uri->route uri)]
-    (if (and (some? txt-path)
-             (no-data? id))
+(defn init-data-async! [db new-uri]
+  (let [{:keys [txt-path id] :as route} (router/uri->route new-uri)]
+    (when (and (some? txt-path)
+               (no-data? new-uri))
       (go
-        ;(debug "init-data-async! and refresh data" route)
-        (let [txt (<! (ajax/async-call {:url (router/txt-path-options uri config/page-count)
+        (let [txt (<! (ajax/async-call {:url (router/txt-path-options new-uri config/page-count)
                                         :raw-response? true}))]
           (assert (some? txt))
-          (when (fn? callback)
-            (callback {:txt txt
-                       :route route
-                       :uri uri})))))))
+          (rf/dispatch [:common/set-init-data new-uri txt]))))))
 
-(re-frame/reg-event-db
+(rf/reg-event-db
   :common/set-init-data
-  (fn-traced [db [_ route-id txt]]
-    (assoc-in db [route-id] (txt->state txt))))
+  (fn-traced [db [_ uri txt]]
+    (assoc-in db [uri] (txt->state txt))))
 
-(re-frame/reg-event-fx
-  :common/route
+(rf/reg-event-fx
+  :common/set-route
   (fn-traced [{db :db} [_ uri]]
-    (let [{:keys [id]
-           :as route} (router/uri->route uri)]
-      (when (no-data? id)
-        (init-data-async! uri (fn [{:keys [txt]}]
-                                (re-frame/dispatch [:common/set-init-data id txt]))))
-      {:db (assoc db :active-route route)})))
+    (let [{:as route} (router/uri->route uri)]
+      (init-data-async! db uri)
+      {:db (assoc db
+             :active-route route
+             :uri uri)})))

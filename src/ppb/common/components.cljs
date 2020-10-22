@@ -10,6 +10,6 @@
                :on-click (fn [e]
                            (j/call e :preventDefault)
                            ;(debug "click " href)
-                           (nav/goto href))}
+                           (nav/goto! href))}
               (some? class) (assoc :class class))
    content])

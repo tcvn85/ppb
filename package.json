@@ -40,6 +40,9 @@
   "scripts": {
     "pw": "./script/preview-watch.sh",
     "b": "./script/build.sh",
-    "p": "./script/publish.sh"
+    "p": "./script/publish.sh",
+    "wspa": "shadow-cljs watch spa",
+    "wsv": "shadow-cljs watch server",
+    "wssr": "shadow-cljs watch ssr"
   }
 }
