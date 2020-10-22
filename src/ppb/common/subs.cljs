@@ -26,10 +26,12 @@
 
 (rf/reg-sub
   :common/data
-  (fn [db [_ router-id params]]
-    (get-in db [(router/uri router-id params) :data])))
+  (fn [db [_ router-id]]
+    (let [params (get-in db [:active-route :params])]
+      (get-in db [(router/uri router-id params) :data]))))
 
 (rf/reg-sub
-  :common/data-meta
-  (fn [db [_ router-id params]]
-    (get-in db [(router/uri router-id params) :meta-data])))
+  :common/meta-data
+  (fn [db [_ router-id]]
+    (let [params (get-in db [:active-route :params])]
+      (get-in db [(router/uri router-id params) :meta-data]))))

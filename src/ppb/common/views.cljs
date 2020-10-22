@@ -10,29 +10,37 @@
     [ppb.common.page.project-item.panel :refer [project-item-panel]]
     [ppb.common.page.header :refer [header]]
     [ppb.common.page.footer :refer [footer quick-quote]]
-    [re-frame.core :as rf]))
+    [ppb.common.log :refer-macros [debug]]
+    [re-frame.core :as rf]
+    [clojure.string :as string]))
 
 (defn- panels [panel-name]
-  (case panel-name
-    :route/home-panel [home-panel]
-    :route/about-panel [about-panel]
-    :route/contact-panel [contact-panel]
-    :route/service-panel [service-panel]
-    :route/projects-panel [prj/projects-panel nil]
-    :route/project-item-panel [project-item-panel]
-    :route/projects-cat [prj/projects-panel (-> @(rf/subscribe [::subs/active-route])
-                                                :params
-                                                :category)]
+  (let [p (some-> panel-name
+                  (name)
+                  (string/split #"\.")
+                  (last)
+                  (#(keyword :route %)))]
+    (case p
+      :route/home-panel [home-panel]
+      :route/about-panel [about-panel]
+      :route/contact-panel [contact-panel]
+      :route/service-panel [service-panel]
+      :route/projects-panel [prj/projects-panel nil]
+      :route/project-item-panel [project-item-panel]
+      :route/projects-cat [prj/projects-panel (-> @(rf/subscribe [::subs/active-route])
+                                                  :params
+                                                  :category)]
 
-    ; can't go here. It goes to other flow by the routes
-    :route/not-found-panel [:div "Not found"]
-    [:div]))
+      ; can't go here. It goes to other flow by the routes
+      :route/not-found-panel [:div "Not found"]
+      [:div])))
 
 (defn show-panel [panel-name]
   [panels panel-name])
 
 (defn nowrap-panel? [p]
-  (-> (#{:route/home-panel} p)
+  (-> (#{:route/home-panel
+         :route/vi.home-panel} p)
       some?))
 
 (defn main-panel []

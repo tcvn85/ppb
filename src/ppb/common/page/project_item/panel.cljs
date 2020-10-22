@@ -4,10 +4,12 @@
     [ppb.common.page.project-item.subs :as subs]
     [ppb.common.model.project :as project]
     [re-frame.core :as rf]
-    [clojure.string :as string]))
+    [clojure.string :as string]
+    [ppb.common.router :as router]
+    [ppb.common.components :as comps]))
 
 (defn project-item-panel []
-  (let [row @(rf/subscribe [::subs/current-prj])]
+  (let [row (first @(rf/subscribe [:common/data ::router/project-item]))]
     [:main.main
      [:div.container-fluid
       [:div.project-detail.mt-4
@@ -51,8 +53,10 @@
         [:h4.mb-5.text-center "OTHER PROJECTS"
          [:span [:img {:src "/img/arrow-down-solid.svg" :width "16" :alt ""}]]]
         [:div.row
-         (doall (for [[title asset-uri] @(rf/subscribe [::subs/related-projects])]
+         (doall (for [[title asset-uri] @(rf/subscribe [:common/meta-data ::router/project-item])]
                   ^{:key title} [:div.col-md-3
                                  [:div.project-related-item
-                                  [:a {:href (project/slug title)} [:img {:src asset-uri :alt ""}]]]]))]]]
+                                  [comps/link
+                                   {:href (router/uri ::router/project-item {:slug (project/slug title)})}
+                                   [:img {:src asset-uri :alt ""}]]]]))]]]
       [quick-quote]]]))

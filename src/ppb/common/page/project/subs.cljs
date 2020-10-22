@@ -5,14 +5,14 @@
 
 (rf/reg-sub
   ::projects
-  (fn [db [_ category]]
+  (fn [{:as db} [_ category]]
     (if (nil? category)
       (get-in db [(router/uri ::router/projects) :data])
       (get-in db [(router/uri ::router/projects-cat {:category category}) :data]))))
 
 (rf/reg-sub
   ::meta
-  (fn [db [_ category]]
+  (fn [{:as db} [_ category]]
     (if (nil? category)
       (get-in db [(router/uri ::router/projects) :meta-data])
       (get-in db [(router/uri ::router/projects-cat {:category category}) :meta-data]))))

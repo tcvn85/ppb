@@ -2,6 +2,7 @@
   (:require
     [ppb.common.serial :as serial]
     [ppb.common.model.project :as project]
+    [ppb.common.model.project-category :as pcat]
     ["fs" :as fs]
     [applied-science.js-interop :as j]
     [clojure.string :as string]
@@ -40,8 +41,8 @@
           "/assets/img/project-detail-6.jpg"]
          ["the nang suite"]]
         ]
-   :vn [["the nang suite"                                        ; slug, title, txt file, html file
-         "Hotels & resorts"                                      ; category
+   :vi [["the nang suite"                                        ; slug, title, txt file, html file
+         "Khách sạn"                                      ; category
          "/assets/img/project1.jpg"
          "2019"
          "Đà Nẵng"
@@ -55,7 +56,7 @@
           "/assets/img/project-detail-6.jpg"]
          ["penhouse d7"]]
         ["penhouse d7"
-         "Residential"
+         "Nhà"
          "/assets/img/project2.jpg"
          "2019"
          "Hồ Chí Minh"
@@ -91,7 +92,11 @@
 
 
 (defn txt-path [lang slug]
-  (str assets-root-path (config/lang-prefix lang "/txt") slug))
+  (str assets-root-path
+       (str "/txt"
+            (when (not= lang :en)
+              (str "/" (name lang))))
+       slug))
 
 (defn txt! []
   (doseq [[lang projects] project-list]
@@ -129,7 +134,7 @@
                (map serial/item2str)
                (concat [@categories])
                (string/join serial/line-separator)
-               (spit (txt-path lang (str "/projects-category/" category ".txt"))))))
+               (spit (txt-path lang (str "/projects-category/" (pcat/category-ids category) ".txt"))))))
 
       (->> projects
            (map serial/item2str)
@@ -152,7 +157,7 @@
    "Gallery images"
    "Related projects"])
 (def csv-headers-desc
-  ["Ngôn ngữ. Giá trị: en|vn."
+  ["Ngôn ngữ. Giá trị: en|vi."
    "Tên dự án là k đ trùng trong cùng 1 ngôn ngữ"
    "Loại dự án. Loại giống nhau sẽ đc nhóm chung với nhau."
    "Hình tiêu đề. Chỉ 1 hình (image số ít). Copy hình zô thư mục img. Copy tên hình vào cột này. VD: img/hinh-a.jpg"

@@ -11,3 +11,10 @@
             (= uri "/"))
       "/index.html"
       uri)))
+
+(defn strip-ns [kw]
+  (-> (name kw) (keyword)))
+
+(defn gen-indexes [l]
+  (->> (interleave (iterate inc 0) l)
+       (partition 2)))

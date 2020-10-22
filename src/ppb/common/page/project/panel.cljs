@@ -9,12 +9,13 @@
     [ppb.common.components :as comps]
     [applied-science.js-interop :as j]
     [ppb.common.log :refer-macros [debug]]
-    [ppb.common.router :as router]))
+    [ppb.common.router :as router]
+    [ppb.common.model.project-category :as pcat]))
 
 (defn project [data]
   [:div.col-md-6.col-sm-6
    [:div.project-item
-    [comps/link {:href (str "/projects/" (prj/get-column data ::prj/slug))}
+    [comps/link {:href (router/uri ::router/project-item {:slug (prj/get-column data ::prj/slug)})}
      [:div
       [:div.project-img-wrapper
        [:img.project-img {:src (prj/get-column data ::prj/image-hero) :alt (prj/get-column data ::prj/title)}]]
@@ -45,7 +46,7 @@
         ^{:key category} [cat-item {:uri uri :active? active? :prj-count prj-count :category category}])
       (doall
         (map-indexed (fn [idx [category prj-count]]
-                       (let [uri (router/uri ::router/projects-cat {:category category})
+                       (let [uri (router/uri ::router/projects-cat {:category (pcat/category-ids category)})
                              active? (= uri @(rf/subscribe [:common/uri]))]
                          ^{:key idx} [cat-item {:uri uri :active? active? :prj-count prj-count :category category}]))
                      (rest @(rf/subscribe [::subs/meta category]))))]

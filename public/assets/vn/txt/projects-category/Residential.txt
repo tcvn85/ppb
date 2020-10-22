@@ -1,2 +1,0 @@
-{"all" 2, "Hotels & resorts" 1, "Residential" 1}
-["penhouse d7" "Residential" "/assets/img/project2.jpg" "2019" "Hồ Chí Minh" "550 m2" "Căn hộ nóc" "/assets/img/project-detail-1.jpg" "/assets/img/project-detail-2.jpg" ["/assets/img/project-detail-3.jpg" "/assets/img/project-detail-4.jpg" "/assets/img/project-detail-5.jpg" "/assets/img/project-detail-6.jpg"] ["the nang suite"]]

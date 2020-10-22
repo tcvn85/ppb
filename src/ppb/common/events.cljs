@@ -5,6 +5,7 @@
     [re-frame.core :as rf]
     [re-frame.db :as rf.db]
     [ppb.common.db :as db]
+    [ppb.common.fx :as fx]
     [day8.re-frame.tracing :refer-macros [fn-traced]]
     [ppb.common.router :as router]
     [ppb.common.serial :as serial]
@@ -43,8 +44,18 @@
 (rf/reg-event-fx
   :common/set-route
   (fn-traced [{db :db} [_ uri]]
-    (let [{:as route} (router/uri->route uri)]
+    (let [{:keys [lang]
+           :as route} (router/uri->route uri)]
       (init-data-async! db uri)
       {:db (assoc db
              :active-route route
+             :lang lang
              :uri uri)})))
+
+(rf/reg-event-fx
+  :common/set-lang
+  (fn-traced [{db :db} [_ new-lang]]
+    (assert (some? (#{:lang/en :lang/vi} new-lang)))
+    (let [{{:keys [id params]} :active-route} db
+          uri (router/uri id params new-lang)]
+      {::fx/route uri})))
