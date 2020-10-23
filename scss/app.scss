@@ -454,6 +454,9 @@
   a {
     display: block;
   }
+  .project-img {
+    filter: grayscale(100%);
+  }
 
   &:hover {
     .project-caption {
@@ -463,6 +466,7 @@
 
     .project-img {
       transform: scale(1.1);
+      filter: none;
     }
   }
 
