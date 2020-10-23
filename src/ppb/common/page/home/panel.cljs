@@ -21,6 +21,6 @@
         [footer/contact-address]]
        [:div.col-md-4
         [footer/copyright]]]
-      [:div.row.footer-content
+      [:div.footer-content
        [footer/qq-button]
        [footer/social-networks]]]]]])
